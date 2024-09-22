@@ -3,25 +3,11 @@ import { sort } from 'fast-sort'
 import Link from 'next/link'
 import Loader from '@/components/Loader/Loader'
 
+
 interface User {
   id: number
   name: string
-  username: string
   email: string
-  address: {
-    street: string
-    suite: string
-    city: string
-    zipcode: string
-    geo?: never
-  }
-  phone: string
-  website: string
-  company: {
-    name: string
-    catchPhrase: string
-    bs: string
-  }
 }
 
 interface IUsersPageProps {
@@ -29,11 +15,12 @@ interface IUsersPageProps {
 }
 
 const UsersPage = async ({ searchParams: { sortOrder } }: IUsersPageProps) => {
-  const res = await fetch('https://jsonplaceholder.typicode.com/users')
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {cache: 'no-cache'})
   const users: User[] = await res.json()
   const sortedUsers = sort(users).asc(
     sortOrder === 'email' ? (user) => user.email : (user) => user.name
   )
+  
   return (
     <div>
       <h1>Users Page</h1>
